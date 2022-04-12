@@ -62,7 +62,7 @@ program paper_adibidea
  boundary_nodes(:,1)=r                                             ! Boundary node-en r balioa beti berdina da definizioz
  do i=1,m                                                          ! Boundary node-en theta angelua homogeneoki banatzeko [0,2*pi) tartean
   pos=2*pi*(i-1/real(m,dp))
-  boundary_nodes(i,2)=theta_i
+  boundary_nodes(i,2)=pos
   b(i+n)=0.0_dp                                                    ! Karga dentsitatea zilindroan 0 ezarriko dugu
  end do 
  
