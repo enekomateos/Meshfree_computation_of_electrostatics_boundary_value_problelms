@@ -15,5 +15,11 @@ contains
 end module halton_secuence
 
 program paper_adibidea
+ use mcf_tipos
+
+
+  contains
+  
+  
 
 end program paper_adibidea
