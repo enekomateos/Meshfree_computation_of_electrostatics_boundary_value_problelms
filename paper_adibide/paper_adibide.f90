@@ -32,7 +32,7 @@ module halton_sequence                   ! Halton sekuentzia kalkulatzeko modulu
 
   end function halton
  
- end module halton_secuence
+ end module halton_sequence
 
 program paper_adibidea
  use mcf_tipos
