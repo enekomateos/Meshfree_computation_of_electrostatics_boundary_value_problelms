@@ -31,8 +31,38 @@ module halton_sequence                   ! Halton sekuentzia kalkulatzeko modulu
    end do
 
   end function halton
- 
  end module halton_sequence
+ 
+ 
+ module funtzioak
+  use mcf_tipos
+  
+  public  :: phi, L_ij
+ 
+  contains
+  
+    function phi(i,j,epsilon)                                            ! Garapen multipolarra erabiliko dugu
+     real(kind=dp), dimension(2), intent(in)    :: i, j                  ! i-k eta j-k nodoen (x,y) koordenatuak dituzte
+     real(kind=dp), intent(in)                  :: epsilon
+     real(kind=dp)                              :: phi, dist, r_j, r_i
+     
+     r_i = sqrt(i(1)**2+i(2)**2)                                         ! Nodo bakoitzaren zentroarekiko distantzia kalkulatu
+     r_j = sqrt(j(1)**2+j(2)**2)
+     dist = abs(r_j-r_i)                                                 ! Nodoen distantzia erlatiboa kalkulatu
+     phi=sqrt(1+(epsilon*dist)**2)                                       ! Garapen mulipolarra aplikatu
+    
+    end function phi
+    
+    
+    function L_ij(fi,epsilon)
+     real(kind=dp), intent(in)        :: fi, epsilon
+     real(kind=dp)                    :: L_ij, zatidura
+     
+     zatidura= (1+fi**2)/fi**3
+     L_ij= zatidura*epsilon**2
+     
+    end function L_ij
+ end module funtzioak
 
 program paper_adibidea
  use mcf_tipos
