@@ -67,13 +67,13 @@ program paper_adibidea
  end do 
  
  ! Xaflak sortu
- xaf_pos_nodo(:,2)=delta
+ xaf_pos_nodo(:,2)=delta                                           ! Nodoen y koordenatua delta distantziara jarri zentrotik
  xaf_neg_nodo(:,2)=-delta
- do i=1,o
+ do i=1,o                                                          ! Homogeneoki banatu x koordenatua
  pos=-L+2*l*(i-1/real(o-1,dp))
  xaf_pos_nodo(:,1)=pos
  xaf_neg_nodo(:,1)=pos
- b(n+m+i)=1.0_dp
+ b(n+m+i)=1.0_dp                                                   ! b bektorean hasierako potentziala idatzi
  b(n+m+o+i)=-1.0_dp
  end do
  
