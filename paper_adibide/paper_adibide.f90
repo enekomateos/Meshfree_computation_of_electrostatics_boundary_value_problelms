@@ -67,14 +67,15 @@ program paper_adibidea
  use mcf_tipos
  use funtzioak
  
- integer, parameter                 :: n=400, m=40, o= 10          ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
- integer                            :: i
- real(kind=dp)                      :: L, delta, r, pos            ! L --> xaflen luzera; delta --> xaflen y ardatzean desbiazioa zentrotik; r --> zilindroaren erradioa
- real(kind=dp), dimension(n,2)      :: nodoak                      ! Nodo guztien (x,y) informazioa daukan bektorea
- real(kind=dp), dimension(m,2)      :: boundary_nodes              ! Boundary node bakoitzaren (r,theta) informazioa daukan bektorea
- real(kind=dp), dimension(o,2)      :: xaf_pos_nodo, xaf_neg_nodo  ! Xaflen nodo bakoitzaren informazioa daukan bektorea
- real(kind=dp), dimension(n+m+2*o)  :: b
- real(kind=dp), parameter           :: pi=acos(-1.0_dp)
+ integer, parameter                    :: n=400, m=40, o= 10          ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
+ integer                               :: i
+ real(kind=dp)                         :: L, delta, r, pos            ! L --> xaflen luzera; delta --> xaflen y ardatzean desbiazioa zentrotik; r --> zilindroaren erradioa
+ real(kind=dp), dimension(n,2)         :: nodoak                      ! Nodo guztien (x,y) informazioa daukan bektorea
+ real(kind=dp), dimension(m,2)         :: boundary_nodes              ! Boundary node bakoitzaren (r,theta) informazioa daukan bektorea
+ real(kind=dp), dimension(o,2)         :: xaf_pos_nodo, xaf_neg_nodo  ! Xaflen nodo bakoitzaren informazioa daukan bektorea
+ real(kind=dp), dimension(n+m+o,n+m+o) :: A
+ real(kind=dp), dimension(n+m+2*o)     :: b
+ real(kind=dp), parameter              :: pi=acos(-1.0_dp)
  
  r=1.0_dp
  L= 0.7*r
@@ -101,11 +102,12 @@ program paper_adibidea
  xaf_pos_nodo(:,2)=delta                                           ! Nodoen y koordenatua delta distantziara jarri zentrotik
  xaf_neg_nodo(:,2)=-delta
  do i=1,o                                                          ! Homogeneoki banatu x koordenatua
- pos=-L+2*l*(i/real(o,dp))
- xaf_pos_nodo(i,1)=pos
- xaf_neg_nodo(i,1)=pos
- b(n+m+i)=1.0_dp                                                   ! b bektorean hasierako potentziala idatzi
- b(n+m+o+i)=-1.0_dp
+  pos=-L+2*l*(i/real(o,dp))
+  xaf_pos_nodo(i,1)=pos
+  xaf_neg_nodo(i,1)=pos
+  b(n+m+i)=1.0_dp                                                   ! b bektorean hasierako potentziala idatzi
+  b(n+m+o+i)=-1.0_dp
  end do
+ 
  
 end program paper_adibidea
