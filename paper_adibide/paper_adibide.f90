@@ -67,47 +67,57 @@ program paper_adibidea
  use mcf_tipos
  use funtzioak
  
- integer, parameter                    :: n=400, m=40, o= 10          ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
- integer                               :: i
- real(kind=dp)                         :: L, delta, r, pos            ! L --> xaflen luzera; delta --> xaflen y ardatzean desbiazioa zentrotik; r --> zilindroaren erradioa
- real(kind=dp), dimension(n,2)         :: nodoak                      ! Nodo guztien (x,y) informazioa daukan bektorea
- real(kind=dp), dimension(m,2)         :: boundary_nodes              ! Boundary node bakoitzaren (r,theta) informazioa daukan bektorea
- real(kind=dp), dimension(o,2)         :: xaf_pos_nodo, xaf_neg_nodo  ! Xaflen nodo bakoitzaren informazioa daukan bektorea
+ integer, parameter                    :: n=400, m=40, o=10                ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
+ integer                               :: i, j
+ real(kind=dp)                         :: L, delta, r, pos, fi             ! L --> xaflen luzera; delta --> xaflen y ardatzean desbiazioa zentrotik; r --> zilindroaren erradioa
+ real(kind=dp), dimension(n,2)         :: nodoak                           ! Nodo guztien (x,y) informazioa daukan bektorea
+ real(kind=dp), dimension(m,2)         :: boundary_nodes                   ! Boundary node bakoitzaren (r,theta) informazioa daukan bektorea
+ real(kind=dp), dimension(o,2)         :: xaf_pos_nodo, xaf_neg_nodo       ! Xaflen nodo bakoitzaren informazioa daukan bektorea
  real(kind=dp), dimension(n+m+o,n+m+o) :: A
  real(kind=dp), dimension(n+m+2*o)     :: b
- real(kind=dp), parameter              :: pi=acos(-1.0_dp)
+ real(kind=dp), parameter              :: pi=acos(-1.0_dp), epsilon=2.0_dp
  
  r=1.0_dp
  L= 0.7*r
  delta=0.1*r
  
  ! Barruko nodoak sortu
- nodoak(:,1)=halton(2,n)                                           ! Barruko nodoen x balioak sortzeko
- nodoak(:,2)=halton(3,n)                                           ! Barruko nodoen y balioak sortzeko
+ nodoak(:,1)=halton(2,n)                                                 ! Barruko nodoen x balioak sortzeko
+ nodoak(:,2)=halton(3,n)                                                 ! Barruko nodoen y balioak sortzeko
  do i=1,n
-  nodoak(i,1)=nodoak(i,1)*2-1                                      ! Nodoen balioa [-1,1] tartera zabaldu
+  nodoak(i,1)=nodoak(i,1)*2-1                                            ! Nodoen balioa [-1,1] tartera zabaldu
   nodoak(i,2)=nodoak(i,2)*2-1
-  b(i)=0.0_dp                                                      ! Karga dentsitatea erdiko nodoetan 0 da
+  b(i)=0.0_dp                                                            ! Karga dentsitatea erdiko nodoetan 0 da
  end do
  
  ! Boundary nodes sortu
- boundary_nodes(:,1)=r                                             ! Boundary node-en r balioa beti berdina da definizioz
- do i=1,m                                                          ! Boundary node-en theta angelua homogeneoki banatzeko [0,2*pi) tartean
+ boundary_nodes(:,1)=r                                                   ! Boundary node-en r balioa beti berdina da definizioz
+ do i=1,m                                                                ! Boundary node-en theta angelua homogeneoki banatzeko [0,2*pi) tartean
   pos=2*pi*(i/real(m,dp))
   boundary_nodes(i,2)=pos
-  b(i+n)=0.0_dp                                                    ! Karga dentsitatea zilindroan 0 ezarriko dugu
+  b(i+n)=0.0_dp                                                          ! Karga dentsitatea zilindroan 0 ezarriko dugu
  end do 
  
  ! Xaflak sortu
- xaf_pos_nodo(:,2)=delta                                           ! Nodoen y koordenatua delta distantziara jarri zentrotik
+ xaf_pos_nodo(:,2)=delta                                                 ! Nodoen y koordenatua delta distantziara jarri zentrotik
  xaf_neg_nodo(:,2)=-delta
- do i=1,o                                                          ! Homogeneoki banatu x koordenatua
+ do i=1,o                                                                ! Homogeneoki banatu x koordenatua
   pos=-L+2*l*(i/real(o,dp))
   xaf_pos_nodo(i,1)=pos
   xaf_neg_nodo(i,1)=pos
-  b(n+m+i)=1.0_dp                                                   ! b bektorean hasierako potentziala idatzi
+  b(n+m+i)=1.0_dp                                                        ! b bektorean hasierako potentziala idatzi
   b(n+m+o+i)=-1.0_dp
  end do
  
+ ! A matrizea sortu
+ do i=1, n
+  do j=1, n+m+o
+   fi=phi(nodoak(i,:),nodoak(j,:), epsilon)
+   if (i<=n) then                                                        ! Lehenengo n lerroak L-rekin bete
+    A(i,j)=L_(fi,epsilon)
+   else                                                                  ! Hurrengo guztiak phi-rekin (boundary nodes eta xaflak)
+    A(i,j)=fi
+  end do
+ end do
  
 end program paper_adibidea
