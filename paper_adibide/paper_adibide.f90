@@ -53,10 +53,18 @@ module halton_sequence                   ! Halton sekuentzia kalkulatzeko modulu
     end function phi
     
     
-    function L_ij(fi,epsilon)
-     real(kind=dp), intent(in)        :: fi, epsilon
-     real(kind=dp)                    :: L_ij, zatidura
+    function L_ij(phi,i,j,epsilon)
+     real(kind=dp), intent(in)        :: epsilon, i, j
+     real(kind=dp)                    :: L_ij, zatidura, fi
+     interface
+      function phi(i,j)
+       use mcf_tipos
+        real(kind=dp), intent(in) :: i,j
+        real(kind=dp)             :: phi
+       end function
+     end interface
      
+     fi=phi(i,j)
      zatidura= (1+fi**2)/fi**3
      L_ij= zatidura*epsilon**2
      
