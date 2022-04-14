@@ -76,6 +76,7 @@ program paper_adibidea
  use mcf_tipos
  use halton_sequence
  use funtzioak
+ use mcf_slineales
  
  integer, parameter                    :: n=400, m=40, o=10                ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
  integer                               :: i, j
@@ -130,5 +131,9 @@ program paper_adibidea
    end if
   end do
  end do
+ 
+ ! A matrizea ebatzi
+ 
+ call gaussj(A,b)                                                        ! moduluak intent(inout) itxura dauka beraz gure soluzioa b matrizea izango da
  
 end program paper_adibidea
