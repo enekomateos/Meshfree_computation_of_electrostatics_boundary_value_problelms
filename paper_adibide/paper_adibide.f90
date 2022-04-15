@@ -81,24 +81,24 @@ program paper_adibidea
  
  ! Barruko nodoak sortu
  open(unit=11, file="nodoak.dat", action="write", status="replace")
-  nodoak(:,1)=halton(2,n)                                                 ! Barruko nodoen r balioak sortzeko
-  nodoak(:,2)=halton(3,n)                                                 ! Barruko nodoen theta balioak sortzeko
+  nodoak(:,1)=halton(2,n)                                                                                 ! Barruko nodoen r balioak sortzeko
+  nodoak(:,2)=halton(3,n)                                                                                 ! Barruko nodoen theta balioak sortzeko
   do i=1,n
-   nodoak(i,2)=nodoak(i,2)*2*pi                                           ! theta-ren balioa [0,1]-->[0,2pi] zabaltzeko
-   b(i)=0.0_dp                                                            ! Karga dentsitatea erdiko nodoetan 0 da.
+   nodoak(i,2)=nodoak(i,2)*2*pi                                                                           ! theta-ren balioa [0,1]-->[0,2pi] zabaltzeko
+   b(i)=0.0_dp                                                                                            ! Karga dentsitatea erdiko nodoetan 0 da.
    write(unit=11, fmt="(2f16.8)") sqrt(nodoak(i,1))*cos(nodoak(i,2)), sqrt(nodoak(i,1))*sin(nodoak(i,2))
-   guztiak(i,1)=sqrt(nodoak(i,1))*cos(nodoak(i,2))                                               ! A matrizea sortzeko nodo guztien koordenatuak batera beharko ditugu
-   guztiak(i,2)=sqrt(nodoak(i,1))*sin(nodoak(i,2))                                               ! A matrizea sortzeko nodo guztien koordenatuak batera beharko ditugu
+   guztiak(i,1)=sqrt(nodoak(i,1))*cos(nodoak(i,2))                                                        ! A matrizea sortzeko nodo guztien koordenatuak batera beharko ditugu
+   guztiak(i,2)=sqrt(nodoak(i,1))*sin(nodoak(i,2))                                                        ! A matrizea sortzeko nodo guztien koordenatuak batera beharko ditugu
   end do
  close(unit=11)
  
  ! Boundary nodes sortu
  open(unit=12, file="nodoak2.dat", action="write", status="replace")
-  do i=1,m                                                                ! Boundary node-en theta angelua homogeneoki banatzeko [0,2*pi) tartean
-   theta=2*pi*(i/real(m,dp))                                              ! Gogoratu, r=1 izango dela bounday node guztietarako
+  do i=1,m                                                                                                ! Boundary node-en theta angelua homogeneoki banatzeko [0,2*pi) tartean
+   theta=2*pi*(i/real(m,dp))                                                                              ! Gogoratu, r=1 izango dela bounday node guztietarako
    boundary_nodes(i,1)=r*cos(theta)
    boundary_nodes(i,2)=r*sin(theta)             
-   b(n+i)=0.0_dp                                                          ! Karga dentsitatea zilindroan 0 ezarriko dugu
+   b(n+i)=0.0_dp                                                                                          ! Karga dentsitatea zilindroan 0 ezarriko dugu
    write(unit=12, fmt="(2f16.8)") boundary_nodes(i,1), boundary_nodes(i,2) 
    guztiak(n+i,1)=boundary_nodes(i,1)
    guztiak(n+i,2)=boundary_nodes(i,2)
@@ -107,13 +107,13 @@ program paper_adibidea
 
  ! Xaflak sortu
  open(unit=13, file="nodoak3.dat", action="write", status="replace")
-  xaf_pos_nodo(:,2)=delta                                                 ! Nodoen y koordenatua delta distantziara jarri zentrotik
+  xaf_pos_nodo(:,2)=delta                                                                                 ! Nodoen y koordenatua delta distantziara jarri zentrotik
   xaf_neg_nodo(:,2)=-delta
-  do i=1,o                                                                ! Homogeneoki banatu x koordenatua
+  do i=1,o                                                                                                ! Homogeneoki banatu x koordenatua
    pos=-L+2*l*(i/real(o,dp))
    xaf_pos_nodo(i,1)=pos
    xaf_neg_nodo(i,1)=pos
-   b(n+m+i)=1.0_dp                                                        ! b bektorean hasierako potentziala idatzi
+   b(n+m+i)=1.0_dp                                                                                        ! b bektorean hasierako potentziala idatzi
    b(n+m+o+i)=-1.0_dp
    write(unit=13, fmt="(2f16.8)") xaf_pos_nodo(i,1), xaf_pos_nodo(i,2)
    write(unit=13, fmt="(2f16.8)") xaf_neg_nodo(i,1), xaf_neg_nodo(i,2)
@@ -123,12 +123,6 @@ program paper_adibidea
    guztiak(n+m+o+i,2)=xaf_neg_nodo(i,2)
   end do
  close(unit=13) 
-
-open(unit=14, file="guztiak.dat", status="replace", action="write")
-  do i=1,n+m+2*o
-    write(unit=14, fmt="(2f16.6)") guztiak(i,1), guztiak(i,2)
-  end do
-close(unit=14)
  
  ! A matrizea sortu
 
