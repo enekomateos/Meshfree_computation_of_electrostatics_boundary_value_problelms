@@ -54,13 +54,14 @@ module halton_sequence                   ! Halton sekuentzia kalkulatzeko modulu
     
     
     function L_ij(phi,i,j,epsilon)
-     real(kind=dp), intent(in)        :: epsilon, i, j
-     real(kind=dp)                    :: L_ij, zatidura, fi
+     real(kind=dp), dimension(:) intent(in)        :: i,j
+     real(kind=dp), intent(in)                     :: epsilon
+     real(kind=dp)                                 :: L_ij, zatidura, fi
      interface
       function phi(i,j)
        use mcf_tipos
-        real(kind=dp), intent(in) :: i,j
-        real(kind=dp)             :: phi
+        real(kind=dp), dimension(:) intent(in) :: i,j
+        real(kind=dp)                          :: phi
        end function
      end interface
      
