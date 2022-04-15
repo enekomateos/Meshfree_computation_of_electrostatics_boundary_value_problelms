@@ -65,9 +65,9 @@ module halton_sequence                   ! Halton sekuentzia kalkulatzeko modulu
 
 program paper_adibidea
  use mcf_tipos
+ use mcf_slineales
  use halton_sequence
  use funtzioak
- use mcf_slineales
  
  integer, parameter                    :: n=400, m=40, o=10                ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
  integer                               :: i, j
@@ -114,8 +114,9 @@ program paper_adibidea
  ! A matrizea sortu
  do i=1, n
   do j=1, n+m+o
-   fi=phi(nodoak(i,:),nodoak(j,:), epsilon)
-   if (i<=n) then                                                        ! Lehenengo n lerroak L-rekin bete
+   if (i<=n) then
+    fi=phi(nodoak(i,:),nodoak(j,:), epsilon)
+   if (i>n).and.(i<=n+m) then                                                        ! Lehenengo n lerroak L-rekin bete
     A(i,j)=L_ij(fi,epsilon)
    else                                                                  ! Hurrengo guztiak phi-rekin (boundary nodes eta xaflak)
     A(i,j)=fi
