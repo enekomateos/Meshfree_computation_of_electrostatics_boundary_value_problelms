@@ -128,7 +128,6 @@ program paper_adibidea
 
  do i=1,m+n+2*o
    do j=1,m+n+2*o
-
      if (i<n+1) then
         fi=phi(guztiak(i,:),guztiak(j,:),20.0_dp)
         A(i,j)=L_ij(fi,20.0_dp)
