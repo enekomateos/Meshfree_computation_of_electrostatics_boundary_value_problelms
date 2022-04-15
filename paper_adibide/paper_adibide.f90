@@ -40,8 +40,8 @@ module halton_sequence                   ! Halton sekuentzia kalkulatzeko modulu
  
   contains
   
-    function phi(a,b,epsilon)                                            ! Garapen multipolarra erabiliko dugu
-     real(kind=dp), dimension(:), intent(in)    :: a, b                  ! i-k eta j-k nodoen (x,y) koordenatuak dituzte
+    function phi(i,j,epsilon)                                            ! Garapen multipolarra erabiliko dugu
+     real(kind=dp), dimension(:), intent(in)    :: i, j                  ! i-k eta j-k nodoen (x,y) koordenatuak dituzte
      real(kind=dp), intent(in)                  :: epsilon
      real(kind=dp)                              :: phi, dist, r_j, r_i
      
