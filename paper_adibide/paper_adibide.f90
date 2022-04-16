@@ -29,31 +29,41 @@ module halton_sequence                   ! Halton sekuentzia kalkulatzeko modulu
   end function halton
  end module halton_sequence
  
- module funtzioak
+module funtzioak
   use mcf_tipos
- 
+  
   public  :: phi, L_ij
+ 
   contains
   
-    function phi(i,j,eps)                                            ! Garapen multipolarra erabiliko dugu
+    function phi(i,j,epsilon)                                            ! Garapen multipolarra erabiliko dugu
      real(kind=dp), dimension(:), intent(in)    :: i, j                  ! i-k eta j-k nodoen (x,y) koordenatuak dituzte
-     real(kind=dp), intent(in)                  :: eps
+     real(kind=dp), intent(in)                  :: epsilon
      real(kind=dp)                              :: phi, dist, r_j, r_i
      
      r_i = sqrt(i(1)**2+i(2)**2)                                         ! Nodo bakoitzaren zentroarekiko distantzia kalkulatu
      r_j = sqrt(j(1)**2+j(2)**2)
      dist = abs(r_j-r_i)                                                 ! Nodoen distantzia erlatiboa kalkulatu
-     phi=sqrt(1+(eps*dist)**2)                                       ! Garapen mulipolarra aplikatu
+     phi=sqrt(1+(epsilon*dist)**2)                                       ! Garapen mulipolarra aplikatu
     
     end function phi
     
     
-    function L_ij(fi,eps)
-     real(kind=dp), intent(in)        :: eps,fi
-     real(kind=dp)                    :: L_ij, zatidura
-          
+    function L_ij(phi,i,j,epsilon)
+     real(kind=dp), dimension(:) intent(in)        :: i,j
+     real(kind=dp), intent(in)                     :: epsilon
+     real(kind=dp)                                 :: L_ij, zatidura, fi
+     interface
+      function phi(i,j)
+       use mcf_tipos
+        real(kind=dp), dimension(:) intent(in) :: i,j
+        real(kind=dp)                          :: phi
+       end function
+     end interface
+     
+     fi=phi(i,j)
      zatidura= (1+fi**2)/fi**3
-     L_ij= zatidura*eps**2
+     L_ij= zatidura*epsilon**2
      
     end function L_ij
  end module funtzioak
