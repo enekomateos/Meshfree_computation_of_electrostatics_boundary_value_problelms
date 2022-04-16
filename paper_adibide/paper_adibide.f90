@@ -139,14 +139,14 @@ program paper_adibidea
  do i=1,m+n+2*o
    do j=1,m+n+2*o
      if (i<n+1) then
-        fi=phi(guztiak(i,:),guztiak(j,:),20.0_dp)
-        A(i,j)=L_ij(fi,20.0_dp)
+        A(i,j)=L_ij(phi,guztiak(i,:),guztiak(j,:),20.0_dp)
      else
         A(i,j)=phi(guztiak(i,:),guztiak(j,:),20.0_dp)
      end if
    end do
  end do
 
+ ! Sistema ebatzi behar dugu orain
  call gaussj(A,b)                                                        ! moduluak intent(inout) itxura dauka beraz gure soluzioa b matrizea izango da
  
 end program paper_adibidea
