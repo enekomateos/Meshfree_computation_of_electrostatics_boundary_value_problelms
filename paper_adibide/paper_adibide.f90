@@ -83,7 +83,7 @@ program paper_adibidea
  real(kind=dp), dimension(o,2)             :: xaf_pos_nodo, xaf_neg_nodo       ! Xaflen nodo bakoitzaren informazioa daukan bektorea
  real(kind=dp), dimension(n+m+2*o,2)       :: guztiak
  real(kind=dp), dimension(n+m+2*o,n+m+2*o) :: A
- real(kind=dp), dimension(n+m+2*o,1)         :: b
+ real(kind=dp), dimension(n+m+2*o,1)       :: b
  real(kind=dp), parameter                  :: pi=acos(-1.0_dp), epsilon=2.0_dp
  real(kind=dp), dimension(n+m+2*o)         :: indizeak
  
@@ -97,7 +97,7 @@ program paper_adibidea
   nodoak(:,2)=halton(3,n)                                                                                 ! Barruko nodoen theta balioak sortzeko
   do i=1,n
    nodoak(i,2)=nodoak(i,2)*2*pi                                                                           ! theta-ren balioa [0,1]-->[0,2pi] zabaltzeko
-   b(i,1)=0.0_dp                                                                                            ! Karga dentsitatea erdiko nodoetan 0 da.
+   b(i,1)=0.0_dp                                                                                          ! Karga dentsitatea erdiko nodoetan 0 da.
    write(unit=11, fmt="(2f16.8)") sqrt(nodoak(i,1))*cos(nodoak(i,2)), sqrt(nodoak(i,1))*sin(nodoak(i,2))
    guztiak(i,1)=sqrt(nodoak(i,1))*cos(nodoak(i,2))                                                        ! A matrizea sortzeko nodo guztien koordenatuak batera beharko ditugu
    guztiak(i,2)=sqrt(nodoak(i,1))*sin(nodoak(i,2))                                                        ! A matrizea sortzeko nodo guztien koordenatuak batera beharko ditugu
@@ -110,7 +110,7 @@ program paper_adibidea
    theta=2*pi*(i/real(m,dp))                                                                              ! Gogoratu, r=1 izango dela bounday node guztietarako
    boundary_nodes(i,1)=r*cos(theta)
    boundary_nodes(i,2)=r*sin(theta)             
-   b(n+i,1)=0.0_dp                                                                                          ! Karga dentsitatea zilindroan 0 ezarriko dugu
+   b(n+i,1)=0.0_dp                                                                                        ! Karga dentsitatea zilindroan 0 ezarriko dugu
    write(unit=12, fmt="(2f16.8)") boundary_nodes(i,1), boundary_nodes(i,2) 
    guztiak(n+i,1)=boundary_nodes(i,1)
    guztiak(n+i,2)=boundary_nodes(i,2)
@@ -125,7 +125,7 @@ program paper_adibidea
    pos=-L+2*l*(i/real(o,dp))
    xaf_pos_nodo(i,1)=pos
    xaf_neg_nodo(i,1)=pos
-   b(n+m+i,1)=1.0_dp                                                                                        ! b bektorean hasierako potentziala idatzi
+   b(n+m+i,1)=1.0_dp                                                                                      ! b bektorean hasierako potentziala idatzi
    b(n+m+o+i,1)=-1.0_dp
    write(unit=13, fmt="(2f16.8)") xaf_pos_nodo(i,1), xaf_pos_nodo(i,2)
    write(unit=13, fmt="(2f16.8)") xaf_neg_nodo(i,1), xaf_neg_nodo(i,2)
