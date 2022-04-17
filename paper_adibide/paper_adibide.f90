@@ -73,6 +73,7 @@ program paper_adibidea
  use mcf_tipos
  use halton_sequence
  use funtzioak
+ use mcf_slineales
  
  integer, parameter                        :: n=400, m=40, o=10                ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
  integer                                   :: i, j
