@@ -56,7 +56,7 @@ module funtzioak
      interface
       function phi(i,j)
        use mcf_tipos
-        real(kind=dp), dimension(:) intent(in) :: i,j
+        real(kind=dp), dimension(:), intent(in) :: i,j
         real(kind=dp)                          :: phi
        end function
      end interface
