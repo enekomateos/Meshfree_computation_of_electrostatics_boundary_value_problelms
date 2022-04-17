@@ -41,10 +41,10 @@ module funtzioak
      real(kind=dp), intent(in)                  :: epsilon
      real(kind=dp)                              :: phi, dist, r_j, r_i
      
-     r_i = sqrt(i(1)**2+i(2)**2)                                         ! Nodo bakoitzaren zentroarekiko distantzia kalkulatu
-     r_j = sqrt(j(1)**2+j(2)**2)
-     dist = abs(r_j-r_i)                                                 ! Nodoen distantzia erlatiboa kalkulatu
-     phi=sqrt(1+(epsilon*dist)**2)                                       ! Garapen mulipolarra aplikatu
+     r_i=(i(1)-j(1))**2                                                  ! x direkzioko distantzia
+     r_j=(i(2)-j(2))**2                                                  ! y direkzioko distantzia
+     dist=r_i+r_j
+     phi=sqrt(1+dist*epsilon**2)                                         ! Garapen mulipolarra aplikatu
     
     end function phi
     
@@ -151,7 +151,5 @@ program paper_adibidea
  ! Sistema ebatzi behar dugu orain
  call gaussj(A,b)                                                        ! moduluak intent(inout) itxura dauka beraz gure soluzioa b matrizea izango da
  
- !call lu_descomposicion(A,indizeak,det)
- !call lu_resolucion(A,indizeak,b)
  
 end program paper_adibidea
