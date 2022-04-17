@@ -50,7 +50,7 @@ module funtzioak
     
     
     function L_ij(phi,i,j,epsilon)
-     real(kind=dp), dimension(:) intent(in)        :: i,j
+     real(kind=dp), dimension(:), intent(in)        :: i,j
      real(kind=dp), intent(in)                     :: epsilon
      real(kind=dp)                                 :: L_ij, zatidura, fi
      interface
