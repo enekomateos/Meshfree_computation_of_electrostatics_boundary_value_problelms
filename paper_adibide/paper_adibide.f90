@@ -62,7 +62,7 @@ module funtzioak
        end function
      end interface
      
-     fi=phi(i,j)
+     fi=phi(i,j,epsilon)
      zatidura= (1+fi**2)/fi**3
      L_ij= zatidura*epsilon**2
      
