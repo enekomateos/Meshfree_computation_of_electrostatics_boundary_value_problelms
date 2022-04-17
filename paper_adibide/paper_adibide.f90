@@ -77,7 +77,7 @@ program paper_adibidea
  
  integer, parameter                        :: n=400, m=40, o=10                ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
  integer                                   :: i, j
- real(kind=dp)                             :: L, delta, r, theta, fi, pos      ! L --> xaflen luzera; delta --> xaflen y ardatzean desbiazioa zentrotik; r --> zilindroaren erradioa
+ real(kind=dp)                             :: L, delta, r, theta, fi, pos,det  ! L --> xaflen luzera; delta --> xaflen y ardatzean desbiazioa zentrotik; r --> zilindroaren erradioa; det --> lu_descomposicion eskatzen duen output-a
  real(kind=dp), dimension(n,2)             :: nodoak                           ! Nodo guztien (x,y) informazioa daukan bektorea
  real(kind=dp), dimension(m,2)             :: boundary_nodes                   ! Boundary node bakoitzaren (x,y) informazioa daukan bektorea
  real(kind=dp), dimension(o,2)             :: xaf_pos_nodo, xaf_neg_nodo       ! Xaflen nodo bakoitzaren informazioa daukan bektorea
