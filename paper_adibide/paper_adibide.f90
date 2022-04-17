@@ -151,7 +151,7 @@ program paper_adibidea
  ! Sistema ebatzi behar dugu orain
  !call gaussj(A,b)                                                        ! moduluak intent(inout) itxura dauka beraz gure soluzioa b matrizea izango da
  
- call lu_descompsocion(A,indizeak,1)
+ call lu_descomposicion(A,indizeak,det)
  call lu_resolucion(A,indizeak,b)
  
 end program paper_adibidea
