@@ -85,7 +85,7 @@ program paper_adibidea
  real(kind=dp), dimension(n+m+2*o,n+m+2*o) :: A
  real(kind=dp), dimension(n+m+2*o)         :: b
  real(kind=dp), parameter                  :: pi=acos(-1.0_dp), epsilon=2.0_dp
-
+ real(kind=dp), dimension(n+m+2*o)         :: indizeak
  
  r=1.0_dp
  L= 0.7*r
@@ -149,6 +149,9 @@ program paper_adibidea
  end do
 
  ! Sistema ebatzi behar dugu orain
- call gaussj(A,b)                                                        ! moduluak intent(inout) itxura dauka beraz gure soluzioa b matrizea izango da
+ !call gaussj(A,b)                                                        ! moduluak intent(inout) itxura dauka beraz gure soluzioa b matrizea izango da
+ 
+ call lu_descompsocion(A,indizeak,1)
+ call lu_resolucion(A,indizeak,b)
  
 end program paper_adibidea
