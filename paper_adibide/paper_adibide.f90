@@ -80,7 +80,7 @@ program paper_adibidea
  real(kind=dp)                             :: L, delta, r, theta, pos  ! L --> xaflen luzera; delta --> xaflen y ardatzean desbiazioa zentrotik; r --> zilindroaren erradioa; det --> lu_descomposicion eskatzen duen output-a
  real(kind=dp), dimension(n,2)             :: nodoak                           ! Nodo guztien (x,y) informazioa daukan bektorea
  real(kind=dp), dimension(n+m+2*o,2)       :: guztiak
- real(kind=dp), dimension(n+m+2*o,n+m+2*o) :: A,AA
+ real(kind=dp), dimension(n+m+2*o,n+m+2*o) :: A
  real(kind=dp), dimension(n+m+2*o,1)       :: b
  real(kind=dp), parameter                  :: pi=acos(-1.0_dp), epsilon=2.0_dp
  real(kind=dp)                             :: u,x,y,c,d,f,g
@@ -124,15 +124,13 @@ program paper_adibidea
   end do
  close(unit=13) 
  
- ! A eta AA matrizea sortu, sistema ebaztean AA matrizea erabiliko dugu eta horrela A matrizea ez dugu aldatuko.
+ ! A matrizea sortu
  do i=1,m+n+2*o
    do j=1,m+n+2*o
      if (i<n+1) then
         A(i,j)=L_ij(phi,guztiak(i,:),guztiak(j,:),20.0_dp)
-        AA(i,j)=A(i,j)
      else
         A(i,j)=phi(guztiak(i,:),guztiak(j,:),20.0_dp)
-        AA(i,j)=A(i,j)
      end if
    end do
  end do
