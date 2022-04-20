@@ -77,22 +77,17 @@ program paper_adibidea
  
  integer, parameter                        :: n=400, m=40, o=10                ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
  integer                                   :: i, j, k, npausu, kon
- real(kind=dp)                             :: L, delta, r, theta, pos  ! L --> xaflen luzera; delta --> xaflen y ardatzean desbiazioa zentrotik; r --> zilindroaren erradioa; det --> lu_descomposicion eskatzen duen output-a
- real(kind=dp), dimension(n,2)             :: nodoak                           ! Nodo guztien (x,y) informazioa daukan bektorea
- real(kind=dp), dimension(n+m+2*o,2)       :: guztiak
- real(kind=dp), dimension(n+m+2*o,n+m+2*o) :: A
- real(kind=dp), dimension(n+m+2*o,1)       :: b
+ real(kind=dp)                             :: L, delta, r, theta, pos          ! L --> xaflen luzera; delta --> xaflen y ardatzean desbiazioa zentrotik; r --> zilindroaren erradioa
+ real(kind=dp), dimension(n,2)             :: nodoak                           ! Erdiko nodoen (x,y) informazioa daukan bektorea
+ real(kind=dp), dimension(n+m+2*o,2)       :: guztiak                          ! Nodo guztiak (boundary+xafla ere) hemen daude
+ real(kind=dp), dimension(n+m+2*o,n+m+2*o) :: A                                ! Sistemaren matrizea
+ real(kind=dp), dimension(n+m+2*o,1)       :: b                                ! Hasierako baldintzak
  real(kind=dp), parameter                  :: pi=acos(-1.0_dp), epsilon=2.0_dp
- real(kind=dp)                             :: u,x,y,c,d,f,g
+ real(kind=dp)                             :: u,x,y,c,d,f,g                    ! u--> Soluzioa puntu batean; x,y --> emaitza irudikatzeko; c,d,f,g --> emaitza irudikatzeko
  real(kind=dp), dimension(2)               :: bek
  r=1.0_dp
  L= 0.7*r
  delta=0.1*r
- 
- c=-1.0_dp
- d=1.0_dp
- f=-1.0_dp
- g=1.0_dp
 
  ! Barruko nodoak sortu
   nodoak(:,1)=halton(2,n)                                                                                 ! Barruko nodoen r balioak sortzeko
@@ -106,7 +101,7 @@ program paper_adibidea
  
  ! Boundary nodes sortu
   do i=1,m                                                                                                ! Boundary node-en theta angelua homogeneoki banatzeko [0,2*pi) tartean
-   theta=2*pi*(i/real(m,dp))                                                                              ! Gogoratu, r=1 izango dela bounday node guztietarako
+   theta=2*pi*(i/real(m,dp))                                                                              ! Gogoratu, r=1 izango dela boundary node guztietarako
    guztiak(n+i,1)=r*cos(theta)
    guztiak(n+i,2)=r*sin(theta)             
    b(n+i,1)=0.0_dp                                                                                        ! Karga dentsitatea zilindroan 0 ezarriko dugu
@@ -137,9 +132,14 @@ program paper_adibidea
 
 
  ! Sistema ebatzi behar dugu orain
- call gaussj(AA,b)                                          ! moduluak intent(inout) itxura dauka beraz gure soluzioa b matrizea izango da
+ call gaussj(A,b)                                                                                          ! moduluak intent(inout) itxura dauka beraz gure soluzioa b matrizea izango da
 
- ! Ekuazio diferentziala ebatzi dugunez irudikatu dezagun emaitza
+ ! Ekuazio diferentziala ebatzi dugunez irudikatu dezagun emaitza  
+ c=-1.0_dp
+ d=1.0_dp
+ f=-1.0_dp
+ g=1.0_dp
+ 
   open(unit=11, status="replace", action="write", file="paper_datuak.dat")
   npausu=n+m+2*o
   do i=1,20
