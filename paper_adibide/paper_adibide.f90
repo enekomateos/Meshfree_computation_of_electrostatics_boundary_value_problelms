@@ -111,7 +111,7 @@ program paper_adibidea
   close(unit=20)
  ! Eman dimentsioak matrizeari eta guztiak bektoreari
  total=dimen+m+o*2
- allocate(A(total,total), b(total,1), guztiak(total,1))
+ allocate(A(total,total), b(total,1), guztiak(total,2))
  
  ! Barruko nodoak sartu eta b-ri balioak eman
  open(unit=20, file="nodoak.dat", action="read", status="replace")
@@ -120,6 +120,7 @@ program paper_adibidea
   read(unit=20, fmt="(2f20.12)") guztiak(i,1), guztiak(i,2)
  end do
  close(unit=20)
+ 
  ! Boundary nodes sortu
   do i=1,m                                                                                         ! Boundary node-en theta angelua homogeneoki banatzeko [0,2*pi) tartean
    theta=2*pi*(i/real(m,dp))                                                                       ! Gogoratu, r=1 izango dela boundary node guztietarako
