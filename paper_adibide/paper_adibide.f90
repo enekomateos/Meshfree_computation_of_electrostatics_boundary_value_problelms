@@ -78,7 +78,7 @@ program paper_adibidea
  integer, parameter                         :: n=400, m=40, o=10                ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
  integer                                    :: i, j, k, kon, dimen, total
  real(kind=dp)                              :: L, delta, r, theta, pos          ! L --> xaflen luzera; delta --> xaflen y ardatzean desbiazioa zentrotik; r --> zilindroaren erradioa
- real(kind=dp), dimension(n,2)              :: nodoak, nodoak2                  ! Erdiko nodoen (x,y) informazioa daukan bektorea (nodoak2)
+ real(kind=dp), dimension(n,2)              :: nodoak                           ! Erdiko nodoen (x,y) informazioa daukan bektorea
  real(kind=dp), dimension(:,:), allocatable :: A, b, guztiak                    ! Sistemaren matrizea eta hasierako baldintzak; Nodo guztiak (boundary+xafla ere) hemen daude
  real(kind=dp), parameter                   :: pi=acos(-1.0_dp), epsilon=2.0_dp
  real(kind=dp)                              :: u,x,y,c,d,f,g                    ! u--> Soluzioa puntu batean; x,y --> emaitza irudikatzeko; c,d,f,g --> emaitza irudikatzeko
@@ -90,39 +90,36 @@ program paper_adibidea
  dimen=0
 
  ! Barruko nodoak sortu
+  open(unit=20, file="nodoak.dat", action="write", status="replace")
   nodoak(:,1)=halton(2,n)                                                                         ! Barruko nodoen r balioak sortzeko
   nodoak(:,2)=halton(3,n)                                                                         ! Barruko nodoen theta balioak sortzeko
   do i=1,n
     if (nodoak(i,1)>r-0.02_dp) then                                                               ! Nodoak ez egoteko boundarytik gertuegi
      cycle
     else
+     nodoak(i,2)=nodoak(i,2)*2*pi                                                                 ! theta-ren balioa [0,1]-->[0,2pi] zabaltzeko
      x=sqrt(nodoak(i,1))*cos(nodoak(i,2))
      y=sqrt(nodoak(i,1))*sin(nodoak(i,2))
      if ((x<L+0.02_dp) .and. (((y<delta+0.02_dp) .and. (y>delta-0.02_dp)) .or. ((y>-delta+0.02_dp) .and. (y<-delta-0.02_dp)))) then
       cycle
      else
       dimen=dimen+1
-      nodoak(i,2)=nodoak(i,2)*2*pi                                                                 ! theta-ren balioa [0,1]-->[0,2pi] zabaltzeko
-      nodoak2(i,1)=x                                                                               ! A matrizea sortzeko nodo guztien koordenatuak batera beharko ditugu
-      nodoak2(i,2)=y                                                                               ! A matrizea sortzeko nodo guztien koordenatuak batera beharko ditugu
+      write(unit=20, fmt="(2f20.12)") x,y
      end if
     end if
   end do
-  
+  close(unit=20)
  ! Eman dimentsioak matrizeari eta guztiak bektoreari
  total=dimen+m+o*2
  allocate(A(total,total), b(total,1), guztiak(total,1))
  
  ! Barruko nodoak sartu eta b-ri balioak eman
- do i=1, n
-  if (nodoak2(i,1)=0.0_dp) .and. (nodoak2(j,1)=0.0_dp) then
-   cycle
-  else
-   b(i,1)=0.0_dp                                                                                    ! Karga dentsitatea erdiko nodoetan 0 da.
-   guztiak(i,:)=nodoak2(i,:)
-  end if
+ open(unit=20, file="nodoak.dat", action="read", status="replace")
+ do i=1, dimen
+  b(i,1)=0.0_dp                                                                                    ! Karga dentsitatea erdiko nodoetan 0 da.
+  read(unit=20, fmt="(2f20.12)") guztiak(i,1), guztiak(i,2)
  end do
- 
+ close(unit=20)
  ! Boundary nodes sortu
   do i=1,m                                                                                         ! Boundary node-en theta angelua homogeneoki banatzeko [0,2*pi) tartean
    theta=2*pi*(i/real(m,dp))                                                                       ! Gogoratu, r=1 izango dela boundary node guztietarako
