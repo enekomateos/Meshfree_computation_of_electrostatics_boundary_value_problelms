@@ -114,7 +114,7 @@ program paper_adibidea
  allocate(A(total,total), b(total,1), guztiak(total,2))
  
  ! Barruko nodoak sartu eta b-ri balioak eman
- open(unit=20, file="nodoak.dat", action="read", status="replace")
+ open(unit=20, file="nodoak.dat", action="read", status="old")
  do i=1, dimen
   b(i,1)=0.0_dp                                                                                    ! Karga dentsitatea erdiko nodoetan 0 da.
   read(unit=20, fmt="(2f20.12)") guztiak(i,1), guztiak(i,2)
@@ -171,7 +171,7 @@ program paper_adibidea
         bek(2)=y
         if (x**2+y**2<1) then
            u=0.0_dp
-           do j=1,dimen
+           do j=1,total
            u=u+b(j,1)*phi(bek,guztiak(j,:),20.0_dp)
            end do
            write(unit=11, fmt="(3f20.10)") x, y, u
