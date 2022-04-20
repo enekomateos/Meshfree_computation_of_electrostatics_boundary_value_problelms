@@ -114,9 +114,13 @@ program paper_adibidea
  allocate(A(total,total), b(total,1), guztiak(total,1))
  
  ! Barruko nodoak sartu eta b-ri balioak eman
- do i=1, dimen
-  b(i,1)=0.0_dp                                                                                    ! Karga dentsitatea erdiko nodoetan 0 da.
-  guztiak(i,:)=nodoak2(i,:)
+ do i=1, n
+  if (nodoak2(i,1)=0.0_dp) .and. (nodoak2(j,1)=0.0_dp) then
+   cycle
+  else
+   b(i,1)=0.0_dp                                                                                    ! Karga dentsitatea erdiko nodoetan 0 da.
+   guztiak(i,:)=nodoak2(i,:)
+  end if
  end do
  
  ! Boundary nodes sortu
