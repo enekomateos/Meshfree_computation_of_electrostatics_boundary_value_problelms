@@ -75,11 +75,11 @@ program paper_adibidea
  use funtzioak
  use mcf_slineales
  
- integer, parameter                        :: n=400, m=40, o=10                ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
- integer                                   :: i, j, k, npausu, kon, ptukop
+ integer, parameter                        :: n=200, m=100, o=100                ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
+ integer                                   :: i, j, k, npausu, kon, ptukop, dimen
  real(kind=dp)                             :: L, delta, r, theta, pos          ! L --> xaflen luzera; delta --> xaflen y ardatzean desbiazioa zentrotik; r --> zilindroaren erradioa
- real(kind=dp), dimension(n,2)             :: nodoak                           ! Erdiko nodoen (x,y) informazioa daukan bektorea
- real(kind=dp), dimension(n+m+2*o,2)       :: guztiak                          ! Nodo guztiak (boundary+xafla ere) hemen daude
+ real(kind=dp), dimension(n+40,2)             :: nodoak                           ! Erdiko nodoen (x,y) informazioa daukan bektorea
+ real(kind=dp), dimension(n+m+2*o,3)       :: guztiak                          ! Nodo guztiak (boundary+xafla ere) hemen daude
  real(kind=dp), dimension(n+m+2*o,n+m+2*o) :: A                                ! Sistemaren matrizea
  real(kind=dp), dimension(n+m+2*o,1)       :: b                                ! Hasierako baldintzak
  real(kind=dp), parameter                  :: pi=acos(-1.0_dp), epsilon=2.0_dp
@@ -90,13 +90,28 @@ program paper_adibidea
  delta=0.1*r
 
  ! Barruko nodoak sortu
-  nodoak(:,1)=halton(2,n)                                                                                 ! Barruko nodoen r balioak sortzeko
-  nodoak(:,2)=halton(3,n)                                                                                 ! Barruko nodoen theta balioak sortzeko
-  do i=1,n
-   nodoak(i,2)=nodoak(i,2)*2*pi                                                                           ! theta-ren balioa [0,1]-->[0,2pi] zabaltzeko
-   b(i,1)=0.0_dp                                                                                          ! Karga dentsitatea erdiko nodoetan 0 da.
-   guztiak(i,1)=sqrt(nodoak(i,1))*cos(nodoak(i,2))                                                        ! A matrizea sortzeko nodo guztien koordenatuak batera beharko ditugu
-   guztiak(i,2)=sqrt(nodoak(i,1))*sin(nodoak(i,2))                                                        ! A matrizea sortzeko nodo guztien koordenatuak batera beharko ditugu
+  nodoak(:,1)=halton(2,n+40)                                                                         ! Barruko nodoen r balioak sortzeko
+  nodoak(:,2)=halton(3,n+40)                                                                         ! Barruko nodoen theta balioak sortzeko
+
+  dimen=0
+  i=0
+  do 
+    i=i+1
+    nodoak(i,2)=nodoak(i,2)*2*pi                                                                 ! theta-ren balioa [0,1]-->[0,2pi] zabaltzeko
+    x=sqrt(nodoak(i,1))*cos(nodoak(i,2))
+    y=sqrt(nodoak(i,1))*sin(nodoak(i,2))
+    if ((abs(y-delta)<0.03_dp).or.(abs(y+delta)<0.03_dp)) then
+     cycle
+    else
+     dimen=dimen+1
+     guztiak(dimen,1)=x
+     guztiak(dimen,2)=y
+     guztiak(dimen,3)=1.0_dp
+     b(dimen,1)=0.0_dp
+    end if
+    if (dimen==n) then
+     exit
+    end if
   end do
  
  ! Boundary nodes sortu
@@ -104,6 +119,7 @@ program paper_adibidea
    theta=2*pi*(i/real(m,dp))                                                                              ! Gogoratu, r=1 izango dela boundary node guztietarako
    guztiak(n+i,1)=r*cos(theta)
    guztiak(n+i,2)=r*sin(theta)             
+   guztiak(n+i,3)=2.0_dp             
    b(n+i,1)=0.0_dp                                                                                        ! Karga dentsitatea zilindroan 0 ezarriko dugu
   end do 
 
@@ -112,12 +128,20 @@ program paper_adibidea
    pos=-L+2*l*(i/real(o,dp))
    guztiak(n+m+i,1)=pos
    guztiak(n+m+i,2)=delta
+   guztiak(n+m+i,3)=3.0_dp
    guztiak(n+m+o+i,1)=pos
    guztiak(n+m+o+i,2)=-delta
+   guztiak(n+m+o+i,3)=3.5_dp
    b(n+m+i,1)=1.0_dp                                                                                      ! b bektorean hasierako potentziala idatzi
    b(n+m+o+i,1)=-1.0_dp
   end do
  close(unit=13) 
+
+open(unit=12, file="nodoak.dat", status="replace", action="write")
+   do i=1,n+m+2*o
+      write(unit=12,fmt="(3f16.8)") guztiak(i,1), guztiak(i,2), guztiak(i,3)
+   end do
+close(unit=12)
  
  ! A matrizea sortu
  do i=1,m+n+2*o
@@ -137,15 +161,12 @@ program paper_adibidea
  ! Ekuazio diferentziala ebatzi dugunez irudikatu dezagun emaitza  
  c=-1.0_dp
  d=1.0_dp
- f=-1.0_dp
- g=1.0_dp
  
- ptukop= 20
- 
-  open(unit=11, status="replace", action="write", file="paper_datuak.dat")
+ ptukop= 100
+ open(unit=11, status="replace", action="write", file="paper_datuak.dat")
   npausu=n+m+2*o
   do i=1,ptukop
-     x=f+(i-1)/real(ptukop-1)*(g-f)
+     x=c+(i-1)/real(ptukop-1)*(d-c)
      bek(1)=x
      do k=1,ptukop
      	y=c+(k-1)/real(ptukop-1)*(d-c)
@@ -163,3 +184,4 @@ program paper_adibidea
   end do 
 
 end program paper_adibidea
+
