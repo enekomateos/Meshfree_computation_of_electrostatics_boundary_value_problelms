@@ -76,7 +76,7 @@ program paper_adibidea
  use mcf_slineales
  
  integer, parameter                        :: n=400, m=40, o=10                ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
- integer                                   :: i, j, k, npausu, kon
+ integer                                   :: i, j, k, npausu, kon, ptukop
  real(kind=dp)                             :: L, delta, r, theta, pos          ! L --> xaflen luzera; delta --> xaflen y ardatzean desbiazioa zentrotik; r --> zilindroaren erradioa
  real(kind=dp), dimension(n,2)             :: nodoak                           ! Erdiko nodoen (x,y) informazioa daukan bektorea
  real(kind=dp), dimension(n+m+2*o,2)       :: guztiak                          ! Nodo guztiak (boundary+xafla ere) hemen daude
@@ -140,13 +140,15 @@ program paper_adibidea
  f=-1.0_dp
  g=1.0_dp
  
+ ptukop= 20
+ 
   open(unit=11, status="replace", action="write", file="paper_datuak.dat")
   npausu=n+m+2*o
-  do i=1,20
-     x=f+(i-1)/real(20-1)*(g-f)
+  do i=1,ptukop
+     x=f+(i-1)/real(ptukop-1)*(g-f)
      bek(1)=x
-     do k=1,20
-     	y=c+(k-1)/real(20-1)*(d-c)
+     do k=1,ptukop
+     	y=c+(k-1)/real(ptukop-1)*(d-c)
         bek(2)=y
         if (x**2+y**2<1) then
            u=0.0_dp
