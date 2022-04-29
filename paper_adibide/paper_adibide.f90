@@ -101,7 +101,7 @@ program paper_adibidea
     nodoak(i,2)=nodoak(i,2)*2*pi                                                                 ! theta-ren balioa [0,1]-->[0,2pi] zabaltzeko
     x=sqrt(nodoak(i,1))*cos(nodoak(i,2))
     y=sqrt(nodoak(i,1))*sin(nodoak(i,2))
-    if ((abs(y-delta)<0.03_dp).or.(abs(y+delta)<0.03_dp)) then
+    if (((abs(y-delta)<0.05_dp).or.(abs(y+delta)<0.05_dp)).and.(abs(x)<0.75)) then
      cycle
     else
      dimen=dimen+1
