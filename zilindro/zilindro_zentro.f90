@@ -105,7 +105,6 @@ program paper_adibidea
      cycle
     else
      dimen=dimen+1
-     print*, dimen
      guztiak(dimen,1)=nodoak(i,1)
      guztiak(dimen,2)=nodoak(i,2)
      guztiak(dimen,3)=1.0_dp
