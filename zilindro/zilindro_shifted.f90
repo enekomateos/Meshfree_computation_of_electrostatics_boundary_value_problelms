@@ -130,8 +130,8 @@ program paper_adibidea
  ! Barruko zilindroa sortu
   do i=1,o                                                                                                ! Homogeneoki banatu x koordenatua
    theta=2*pi*(i/real(o,dp))
-   guztiak(n+m+i,1)=rb*cos(theta)+dx
-   guztiak(n+m+i,2)=rb*sin(theta)+dy
+   guztiak(n+m+i,1)=rb*cos(theta)-dx
+   guztiak(n+m+i,2)=rb*sin(theta)-dy
    b(n+m+i)=1.0_dp                                                                                        ! b bektorean hasierako potentziala idatzi
   end do
  close(unit=13) 
@@ -174,7 +174,7 @@ close(unit=12)
        cycle
       end if
         bek(2)=y
-        if (x**2+y**2<1) then
+        if ((x-dx)**2+(y-dy)**2<1) then
            u=0.0_dp
            do j=1,npausu
            u=u+b(j)*phi(bek,guztiak(j,:),20.0_dp)
