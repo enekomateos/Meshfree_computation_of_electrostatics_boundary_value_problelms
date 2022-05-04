@@ -168,6 +168,9 @@ close(unit=12)
      bek(1)=x
      do k=1,ptukop
      	y=c+(k-1)/real(ptukop-1)*(d-c)
+      if (x**2+y**2<=rb**2) then
+       cycle
+      end if
         bek(2)=y
         if (x**2+y**2<1) then
            u=0.0_dp
