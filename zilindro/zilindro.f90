@@ -77,8 +77,8 @@ program paper_adibidea
  
  integer, parameter                        :: n=2000, m=400, o=400                ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
  integer                                   :: i, j, k, npausu, kon, ptukop, dimen
- real(kind=dp)                             :: rb, r, theta, pos, det, dx, dy      ! r --> zilindroaren erradioa; rb --> barruko zilindroaren erradioa, d --> shifts
- real(kind=dp), dimension(n*3,2)           :: nodoak                              ! Erdiko nodoen (x,y) informazioa daukan bektorea
+ real(kind=dp)                             :: rb, r, theta, pos, det              ! r --> zilindroaren erradioa; rb --> barruko zilindroaren erradioa
+ real(kind=dp), dimension(n*3,2)          :: nodoak                              ! Erdiko nodoen (x,y) informazioa daukan bektorea
  real(kind=dp), dimension(n+m+o,3)         :: guztiak                             ! Nodo guztiak (boundary+zilindroa ere) hemen daude
  real(kind=dp), dimension(n+m+o,n+m+o)     :: A                                   ! Sistemaren matrizea
  real(kind=dp), dimension(n+m+o)           :: b
@@ -89,9 +89,6 @@ program paper_adibidea
  
  r=1.0_dp
  rb=r*0.3_dp
- 
- dx=0.2_dp
- dy=0.5_dp
 
  ! Barruko nodoak sortu
   nodoak(:,1)=halton(2,n*3)                                                                         ! Barruko nodoen r balioak sortzeko
@@ -104,10 +101,11 @@ program paper_adibidea
   i=0
   do 
     i=i+1
-    if (((nodoak(i,1)-dx)**2+(nodoak(i,2)-dy)**2<=rb**2).or.(r**2<=(nodoak(i,1))**2+(nodoak(i,2))**2)) then
+    if ((nodoak(i,1)**2+nodoak(i,2)**2<=rb**2).or.(r**2<=nodoak(i,1)**2+nodoak(i,2)**2)) then
      cycle
     else
      dimen=dimen+1
+     print*, dimen
      guztiak(dimen,1)=nodoak(i,1)
      guztiak(dimen,2)=nodoak(i,2)
      guztiak(dimen,3)=1.0_dp
@@ -130,13 +128,13 @@ program paper_adibidea
  ! Barruko zilindroa sortu
   do i=1,o                                                                                                ! Homogeneoki banatu x koordenatua
    theta=2*pi*(i/real(o,dp))
-   guztiak(n+m+i,1)=rb*cos(theta)+dx
-   guztiak(n+m+i,2)=rb*sin(theta)+dy
+   guztiak(n+m+i,1)=rb*cos(theta)
+   guztiak(n+m+i,2)=rb*sin(theta)
    b(n+m+i)=1.0_dp                                                                                        ! b bektorean hasierako potentziala idatzi
   end do
  close(unit=13) 
 
-open(unit=12, file="nodoak_shifted.dat", status="replace", action="write")
+open(unit=12, file="nodoak.dat", status="replace", action="write")
    do i=1,n+m+o
       write(unit=12,fmt="(3f16.8)") guztiak(i,1), guztiak(i,2), guztiak(i,3)
    end do
@@ -163,18 +161,18 @@ close(unit=12)
  d=1.0_dp
  
  ptukop= 100
- open(unit=11, status="replace", action="write", file="paper_datuak_shifted.dat")
+ open(unit=11, status="replace", action="write", file="paper_datuak.dat")
   npausu=n+m+o
   do i=1,ptukop
      x=c+(i-1)/real(ptukop-1)*(d-c)
      bek(1)=x
      do k=1,ptukop
      	y=c+(k-1)/real(ptukop-1)*(d-c)
-      if ((x-dx)**2+(y-dy)**2<=rb**2) then
+      if (x**2+y**2<=rb**2) then
        cycle
       end if
         bek(2)=y
-        if ((x)**2+(y)**2<1) then
+        if (x**2+y**2<1) then
            u=0.0_dp
            do j=1,npausu
            u=u+b(j)*phi(bek,guztiak(j,:),20.0_dp)
