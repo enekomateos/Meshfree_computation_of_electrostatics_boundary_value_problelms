@@ -184,6 +184,6 @@ close(unit=12)
         end if 
      end do
   end do 
-
+  close(unit=11)
 end program paper_adibidea
 
