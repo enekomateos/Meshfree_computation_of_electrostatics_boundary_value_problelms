@@ -37,7 +37,7 @@ module funtzioak
   contains
   
     function phi(i,j,epsilon)                                            ! Garapen multipolarra erabiliko dugu
-     real(kind=dp), dimension(:), intent(in)    :: i, j                  ! i-k eta j-k nodoen (x,y) koordenatuak dituzte
+     real(kind=dp), dimension(:), intent(in)    :: i, j                  ! i-k eta j-k nodoen (x,y,z) koordenatuak dituzte
      real(kind=dp), intent(in)                  :: epsilon
      real(kind=dp)                              :: phi, dist, r_x, r_y, r_z
      
@@ -156,11 +156,13 @@ program paper_adibidea
      if (x**2+y**2<=r2**2) then
         i=i+1
         z=sqrt(r2**2-x**2-y**2)
+        !Esferaren goi gainazala
         guztiak(n+2*m+i,1)=x
         guztiak(n+2*m+i,2)=y
         guztiak(n+2*m+i,3)=z
         guztiak(n+2*m+i,4)=-1.0_dp
         b(n+2*m+i)=-1.0_dp
+        !Esferaren behe gainazala
         guztiak(n+3*m+i,1)=x
         guztiak(n+3*m+i,2)=y
         guztiak(n+3*m+i,3)=-z
