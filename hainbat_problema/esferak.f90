@@ -41,9 +41,9 @@ module funtzioak
      real(kind=dp), intent(in)                  :: epsilon
      real(kind=dp)                              :: phi, dist, r_x, r_y, r_z
      
-     r_x=(i(1)-j(1))**2                                                  ! x direkzioko distantzia
-     r_y=(i(2)-j(2))**2                                                  ! y direkzioko distantzia
-     r_z=(i(3)-j(3))**2
+     r_x=(i(1)-j(1))**2                                                  ! x norabideko distantzia
+     r_y=(i(2)-j(2))**2                                                  ! y norabideko distantzia
+     r_z=(i(3)-j(3))**2                                                  ! z norabideko distantzia
      dist=r_x+r_y+r_z
      phi=sqrt(1+dist*epsilon**2)                                         ! Garapen mulipolarra aplikatu
     
@@ -76,14 +76,14 @@ program paper_adibidea
  use funtzioak
  use mcf_slineales
  
- integer, parameter                        :: n=1000, m=110                 ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
+ integer, parameter                        :: n=1000, m=110                 ! n --> barruko nodo kopurua; m --> "boundary node" kopurua
  integer                                   :: i, j, k, l, npausu, ptukop, dimen
- real(kind=dp)                             :: r1, r2, det          ! L --> xaflen luzera; delta --> xaflen y ardatzean desbiazioa zentrotik; r1 --> kanpoko geruza esferikoaren erradioa; r2 --> barneko geruzaren erradioa
+ real(kind=dp)                             :: r1, r2, det                   ! r1 --> kanpoko geruza esferikoaren erradioa; r2 --> barneko geruzaren erradioa
  real(kind=dp), dimension(2*n,3)           :: nodoak                           ! Erdiko nodoen (x,y) informazioa daukan bektorea
- real(kind=dp), dimension(n+4*m,4)         :: guztiak                          ! Nodo guztiak (boundary+xafla ere) hemen daude
+ real(kind=dp), dimension(n+4*m,4)         :: guztiak                          ! Nodo guztiak gordetzeko 
  real(kind=dp), dimension(n+4*m,n+4*m)     :: A                                ! Sistemaren matrizea
- real(kind=dp), dimension(n+4*m)           :: b           
- integer, dimension(n+4*m)                 :: indizeak                 ! Hasierako baldintzak
+ real(kind=dp), dimension(n+4*m)           :: b                                ! Muga baldintzak
+ integer, dimension(n+4*m)                 :: indizeak                 
  real(kind=dp), parameter                  :: pi=acos(-1.0_dp), epsilon=20.0_dp
  real(kind=dp)                             :: u,x,y,z,c,d,f,g                   
  real(kind=dp), dimension(4*m)             :: x_bek,y_bek
@@ -146,7 +146,7 @@ program paper_adibidea
      end if
  end do
 
- !BARRUKO BOUNDAY NODE-ak SORTU
+ !BARRUKO ESFERAKO BOUNDAY NODE-ak SORTU
  i=0
  j=0
  do
@@ -172,6 +172,7 @@ program paper_adibidea
      end if
  end do
 
+!Nodoak irudikatzeko
 open(unit=12, file="nodoak.dat", status="replace", action="write")
   write(unit=12,fmt="(4f22.12)") (guztiak(i,:), i=1, n+4*m)
 close(unit=12)
@@ -201,9 +202,9 @@ close(unit=12)
 
  open(unit=11, status="replace", action="write", file="datuak.dat")
   npausu=n+4*m
-!  do i=1,ptukop
-!     x=c+(i-1)/real(ptukop-1)*(d-c)
-     bek(1)=0.0_dp
+  do i=1,ptukop
+     x=c+(i-1)/real(ptukop-1)*(d-c)
+     bek(1)=x
      do j=1,ptukop
        y=f+(j-1)/real(ptukop-1)*(g-f)
        bek(2)=y
@@ -219,7 +220,7 @@ close(unit=12)
            end if 
         end do      
      end do
-!  end do 
+  end do 
   close(unit=11)
 
 end program paper_adibidea
