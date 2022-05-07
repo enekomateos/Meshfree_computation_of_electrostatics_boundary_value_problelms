@@ -41,8 +41,8 @@ module funtzioak
      real(kind=dp), intent(in)                  :: epsilon
      real(kind=dp)                              :: phi, dist, r_j, r_i
      
-     r_i=(i(1)-j(1))**2                                                  ! x direkzioko distantzia
-     r_j=(i(2)-j(2))**2                                                  ! y direkzioko distantzia
+     r_i=(i(1)-j(1))**2                                                  ! x norabideko distantzia
+     r_j=(i(2)-j(2))**2                                                  ! y norabideko distantzia
      dist=r_i+r_j
      phi=sqrt(1+dist*epsilon**2)                                         ! Garapen mulipolarra aplikatu
     
@@ -75,16 +75,16 @@ program paper_adibidea
  use funtzioak
  use mcf_slineales
  
- integer, parameter                        :: n=3000, m=400, o=400                ! n --> barruko nodo kopurua; m --> "boundary node" kopurua; o --> xaflako nodo kopurua
- integer                                   :: i, j, k, npausu, kon, ptukop, dimen
- real(kind=dp)                             :: L, delta, r, theta, pos, det          ! L --> xaflen luzera; delta --> xaflen y ardatzean desbiazioa zentrotik; r --> zilindroaren erradioa
+ integer, parameter                        :: n=3000, m=400, o=400                ! n=barruko nodo kopurua; m="boundary node" kopurua; o=xaflako nodo kopurua
+ integer                                   :: i, j, k, npausu, ptukop, dimen
+ real(kind=dp)                             :: L, delta, r, theta, pos, det     ! L=xaflen luzera; delta=xaflen y ardatzean desbiazioa zentrotik; r=zilindroaren erradioa
  real(kind=dp), dimension(n+40,2)          :: nodoak                           ! Erdiko nodoen (x,y) informazioa daukan bektorea
- real(kind=dp), dimension(n+m+2*o,3)       :: guztiak                          ! Nodo guztiak (boundary+xafla ere) hemen daude
+ real(kind=dp), dimension(n+m+2*o,3)       :: guztiak                          ! Nodo guztiak hemen daude
  real(kind=dp), dimension(n+m+2*o,n+m+2*o) :: A                                ! Sistemaren matrizea
- real(kind=dp), dimension(n+m+2*o)         :: b
- integer, dimension(n+m+2*o)               :: indizeak                 ! Hasierako baldintzak
+ real(kind=dp), dimension(n+m+2*o)         :: b                                ! Hasierako baldintzak
+ integer, dimension(n+m+2*o)               :: indizeak                
  real(kind=dp), parameter                  :: pi=acos(-1.0_dp), epsilon=2.0_dp
- real(kind=dp)                             :: u,x,y,c,d,f,g                    ! u--> Soluzioa puntu batean; x,y --> emaitza irudikatzeko; c,d,f,g --> emaitza irudikatzeko
+ real(kind=dp)                             :: u,x,y,c,d,f,g                    ! u=soluzioa puntu batean; x,y: emaitza irudikatzeko; c,d,f,g: emaitza irudikatzeko
  real(kind=dp), dimension(2)               :: bek
  r=1.0_dp
  L= 0.7*r
@@ -98,10 +98,10 @@ program paper_adibidea
   i=0
   do 
     i=i+1
-    nodoak(i,2)=nodoak(i,2)*2*pi                                                                 ! theta-ren balioa [0,1]-->[0,2pi] zabaltzeko
-    x=sqrt(nodoak(i,1))*cos(nodoak(i,2))
+    nodoak(i,2)=nodoak(i,2)*2*pi                                                            ! theta-ren balioa [0,1]-->[0,2pi] zabaltzeko
+    x=sqrt(nodoak(i,1))*cos(nodoak(i,2))                                                    ! erro karratua jarriz erradio osoan zehar uniformeki banatzen dira.
     y=sqrt(nodoak(i,1))*sin(nodoak(i,2))
-    if (((abs(y-delta)<0.05_dp).or.(abs(y+delta)<0.05_dp)).and.(abs(x)<0.75)) then
+    if (((abs(y-delta)<0.05_dp).or.(abs(y+delta)<0.05_dp)).and.(abs(x)<0.75)) then          ! xaflen inguruan nodorik ez sortzeko
      cycle
     else
      dimen=dimen+1
@@ -116,16 +116,16 @@ program paper_adibidea
   end do
  
  ! Boundary nodes sortu
-  do i=1,m                                                                                                ! Boundary node-en theta angelua homogeneoki banatzeko [0,2*pi) tartean
-   theta=2*pi*(i/real(m,dp))                                                                              ! Gogoratu, r=1 izango dela boundary node guztietarako
+  do i=1,m                                                                        ! Boundary node-en theta angelua homogeneoki banatzeko [0,2*pi) tartean
+   theta=2*pi*(i/real(m,dp))                                                      ! Gogoratu, r=1 mugan.
    guztiak(n+i,1)=r*cos(theta)
    guztiak(n+i,2)=r*sin(theta)             
    guztiak(n+i,3)=2.0_dp             
-   b(n+i)=0.0_dp                                                                                        ! Karga dentsitatea zilindroan 0 ezarriko dugu
+   b(n+i)=0.0_dp                                                                  ! Karga dentsitatea zilindroan 0 ezarriko dugu
   end do 
 
  ! Xaflak sortu
-  do i=1,o                                                                                                ! Homogeneoki banatu x koordenatua
+  do i=1,o                                                                         ! Homogeneoki banatu x koordenatua
    pos=-L+2*l*(i/real(o,dp))
    guztiak(n+m+i,1)=pos
    guztiak(n+m+i,2)=delta
@@ -133,11 +133,13 @@ program paper_adibidea
    guztiak(n+m+o+i,1)=pos
    guztiak(n+m+o+i,2)=-delta
    guztiak(n+m+o+i,3)=3.5_dp
-   b(n+m+i)=1.0_dp                                                                                      ! b bektorean hasierako potentziala idatzi
+  !b bektorean hasierako potentziala idatzi
+   b(n+m+i)=1.0_dp
    b(n+m+o+i)=-1.0_dp
   end do
  close(unit=13) 
 
+!Nodoak irudikatzeko
 open(unit=12, file="nodoak.dat", status="replace", action="write")
    do i=1,n+m+2*o
       write(unit=12,fmt="(3f16.8)") guztiak(i,1), guztiak(i,2), guztiak(i,3)
@@ -157,8 +159,9 @@ close(unit=12)
 
 
  ! Sistema ebatzi behar dugu orain
- call lu_descomposicion(A,indizeak,det)                                                                                          ! moduluak intent(inout) itxura dauka beraz gure soluzioa b matrizea izango da
- call lu_resolucion(A,indizeak,b)                                                                                          ! moduluak intent(inout) itxura dauka beraz gure soluzioa b matrizea izango da
+ ! moduluak intent(inout) itxura dauka beraz gure soluzioa b matrizea izango da
+ call lu_descomposicion(A,indizeak,det)                                 
+ call lu_resolucion(A,indizeak,b)                                       
 
  ! Ekuazio diferentziala ebatzi dugunez irudikatu dezagun emaitza  
  c=-1.0_dp
